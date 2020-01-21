@@ -27,6 +27,7 @@ Usage:
 pre-setup.sh [-h|--help] # default
 pre-setup.sh setup # pre-install of rcm, git and curl
 pre-setup.sh pkm # print the package manager used in this machine
+pre-setup.sh os # print what os is being used on the machine
 
 Options:
 
@@ -35,7 +36,7 @@ Options:
 '
 
 version='
-Version: 1.0.0
+Version: 1.1.0
 © 2020, nrxr <nrxr@disroot.org>
 Released under the MIT license terms.
 '
@@ -130,11 +131,12 @@ installRcm() {
 main() {
   cmd="$1"
   case "$cmd" in
-    -h|--help)        shift; print_help "$@";;
-    --version)        shift; print_version "$@";;
-    setup)            shift; installRcm "$@";;
-    pkm)              shift; printGuessPKM "$@";;
-    *)                print_help "$@";;
+    -h|--help) shift; print_help "$@";;
+    --version) shift; print_version "$@";;
+    setup)     shift; installRcm "$@";;
+    pkm)       shift; printGuessPKM "$@";;
+    os)        shift; printGuessOS "$@";;
+    *)         print_help "$@";;
   esac
 }
 
