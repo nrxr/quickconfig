@@ -21,6 +21,10 @@
 #   THE SOFTWARE.
 #
 # 
+  
+PKGS="aws-iam-authenticator awscli blackbox fzf gcc git-extras git-lfs gnupg go htop hugo jq kubernetes-cli kustomize lua mosh mysql nmap pass pgcli postgresql protobuf python-yq r redis rust s3cmd scw stern tarsnap terraform the_silver_searcher tig tree youtube-dl"
+
+RCFILES="fishfiles tmuxfiles nvimfiles"
 
 help='
 Usage:
@@ -59,28 +63,38 @@ checkPreSetup() {
       printf "Please, download the file https://github.com/nrxr/quickconfig/raw/master/pre-setup.sh\n"
     fi
   fi
+
+  OS=$(sh ./pre-setup.sh os)
+  PM=$(sh ./pre-setup.sh pkm)
 }
 
 installFn() {
   checkPreSetup
   sh ./pre-setup.sh setup
-  
-  PKGS="aws-iam-authenticator awscli blackbox fzf gcc git-extras git-lfs gnupg go htop hugo jq kubernetes-cli kustomize lua mongodb mosh mysql nmap pass pgcli postgresql protobuf python-yq r redis rust s3cmd scw stern tarsnap terraform the_silver_searcher tig tree youtube-dl"
 
   if [ "${PM}" = "brew" ] && [ "${OS}" = "mac" ]; then
-      brew install "${PKGS}" reattach-to-user-namespace
+      brew install ${PKGS} reattach-to-user-namespace
   elif [ "${PM}" = "xbps" ]; then
-    sudo xbps-install -S "${PKGS}"
+    sudo xbps-install -S ${PKGS}
   elif [ "${PM}" = "apk" ]; then
-    sudo apk add "${PKGS}"
+    sudo apk add ${PKGS}
   elif [ "${PM}" = "apt" ]; then
-    sudo apt install "${PKGS}"
+    PKGS=$(echo "${PKGS}" | sed 's/the_silver_searcher/silversearcher-ag/')
+    sudo apt install ${PKGS}
   elif [ "${PM}" = "yay" ]; then
-    yay -S "${PKGS}"
+    yay -S ${PKGS}
   else
     printf "don't know how to handle your package manager %s" "${PM}"
     exit
   fi
+
+  for i in $RCFILES; do
+    mkdir -p "$HOME/code/src/github.com/nrxr"
+    if [ ! -d "$HOME/code/src/github.com/nrxr/$i" ]; then
+      git clone "https://github.com/nrxr/$i" "$HOME/code/src/github.com/nrxr/$i"
+    fi
+    cd "$HOME/code/src/github.com/nrxr/$i" && git pull && sh install.sh && cd - || exit
+  done
 }
 
 main() {
