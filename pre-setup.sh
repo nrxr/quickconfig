@@ -50,9 +50,9 @@ print_help() {
 }
 
 guessOS() {
-  if uname -o | grep -q "Darwin"; then
+  if uname -a | grep -q "Darwin"; then
     OS='mac'
-  elif uname -o | grep -q -i linux; then
+  elif uname -a | grep -q -i linux; then
     OS='linux'
   fi
 }
@@ -103,24 +103,24 @@ installRcm() {
         printf "will install rcm with brew...\n"
         {
           brew tap thoughtbot/formulae
-          brew install "${PKGS}"
+          brew install ${PKGS}
         }
     elif [ "${PM}" = "xbps" ]; then
       printf "will install rcm with xbps...\n"
-      sudo xbps-install -S "${PKGS}"
+      sudo xbps-install -S ${PKGS}
     elif [ "${PM}" = "apk" ]; then
       printf "will install rcm with apk...\n"
-      sudo apk add "${PKGS}"
+      sudo apk add ${PKGS}
     elif [ "${PM}" = "apt" ]; then
       printf "will install rcm with apt...\n"
-      sudo apt install "${PKGS}"
+      sudo apt install ${PKGS}
     elif [ "${PM}" = "pacman" ]; then
       printf "will install yay with pacman and then install rcm...\n"
       installYay "$@"
       printf "yay installed; installing rcm...\n"
-      yay -S "${PKGS}"
+      yay -S ${PKGS}
     elif [ "${PM}" = "yay" ]; then
-      yay -S "${PKGS}"
+      yay -S ${PKGS}
     else
       printf "please check in https://github.com/thoughtbot/rcm how to install rcm in your system\n"
       exit
