@@ -24,7 +24,7 @@
   
 PKGS="aws-iam-authenticator awscli blackbox fzf gcc git-extras git-lfs gnupg go htop hugo jq kubernetes-cli kustomize lua mosh mysql nmap pass pgcli postgresql protobuf python-yq r redis rust s3cmd scw stern tarsnap terraform the_silver_searcher tig tree youtube-dl"
 
-RCFILES="fishfiles tmuxfiles nvimfiles"
+RCFILES="fishfiles tmuxfiles nvimfiles gitfiles"
 
 help='
 Usage:
