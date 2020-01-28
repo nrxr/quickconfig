@@ -87,7 +87,7 @@ installYay() {
   sudo pacman -S base-devel git
   mkdir -p ~/code/src/aur.archlinux.org/
   git clone https://aur.archlinux.org/yay.git ~/code/src/aur.archlinux.org/yay
-  cd ~/code/src/aur/archlinux.org/yay && makepkg -risc && cd - || exit
+  cd ~/code/src/aur.archlinux.org/yay && makepkg -risc && cd - || exit
 }
 
 installRcm() {
