@@ -128,6 +128,47 @@ installRcm() {
   fi
 }
 
+installer() {
+  guessOS
+  guessPKM
+
+  # PKGS="$@"
+
+  for pkg in "$@"; do
+    if command -v "${pkg}" > /dev/null; then
+      echo "${pkg} is already installed"
+      continue
+    fi
+
+    printf "On %s and using %s as pm...\n" "${OS}" "${PM}"
+
+    if [ "${PM}" = "brew" ] && [ "${OS}" = "mac" ]; then
+        printf "will install %s with brew...\n" "${pkg}"
+        brew install "${pkg}"
+    elif [ "${PM}" = "xbps" ]; then
+      printf "will install %s with xbps...\n" "${pkg}"
+      sudo xbps-install -S "${pkg}"
+    elif [ "${PM}" = "apk" ]; then
+      printf "will install %s with apk...\n" "${pkg}"
+      sudo apk add "${pkg}"
+    elif [ "${PM}" = "apt" ]; then
+      printf "will install %s with apt...\n" "${pkg}"
+      sudo apt install "${pkg}"
+    elif [ "${PM}" = "pacman" ]; then
+      printf "will install yay with pacman and then install %s...\n" "${pkg}"
+      installYay "$@"
+      printf "yay installed; installing %s...\n" "${pkg}"
+      yay -S "${pkg}"
+    elif [ "${PM}" = "yay" ]; then
+      printf "will install %s with yay...\n" "${pkg}"
+      yay -S "${pkg}"
+    else
+      printf "can't handle your package manager, please install %s\n" "${pkg}"
+      exit
+    fi
+  done
+}
+
 main() {
   cmd="$1"
   case "$cmd" in
@@ -136,6 +177,7 @@ main() {
     setup)     shift; installRcm "$@";;
     pkm)       shift; printGuessPKM "$@";;
     os)        shift; printGuessOS "$@";;
+    install)   shift; installer "$@";;
     *)         print_help "$@";;
   esac
 }
